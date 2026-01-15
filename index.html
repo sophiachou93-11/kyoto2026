@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2026 冬之京都：十六日深旅全紀錄</title>
+    <!-- 引入 Tailwind CSS 與 Lucide 圖標 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Noto Serif TC', serif; }
+        .font-sans-custom { font-family: 'Noto Sans TC', sans-serif; }
+        /* 針對 VS Code 本地預覽優化 */
+        .slide-card {
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .bg-kyoto {
+            background-color: #F9F7F2;
+        }
+    </style>
+</head>
+<body class="bg-kyoto text-[#333]">
+    <div id="root"></div>
+
+    <script>
+        // 行程資料陣列 - 包含完整的 16 天獨立行程
+        const slides = [
+            {
+                type: "cover",
+                title: "冬之京都",
+                subtitle: "十六日旅程全紀錄",
+                date: "2026.01.31 — 02.15",
+                details: "去程 IT284 | 回程 CI177 / BR147 | 住宿：梅小路皇家公園酒店"
+               
+            },
+            {
+                day: "Day 01",
+                date: "1/31 Sat",
+                title: "啟程：抵達古都",
+                transport: "台灣虎航 IT284 (06:55-10:40) ➔ JR HARUKA (¥2200)",
+                schedule: [
+                    { time: "05:30", event: "抵達小港機場辦理報到" },
+                    { time: "10:40", event: "抵達關西國際機場 (KIX)" },
+                    { time: "14:30", event: "搭乘 HARUKA 抵達京都車站 (第4月台)" },
+                    { time: "15:30", event: "入住京都梅小路皇家公園酒店" }
+                ],
+                note: "寄艙行李 23kg <br> 登機行李 10 kg(登機箱+隨身包) <br> HARUKA 自由座位於 4-6 車廂。",
+                img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 02",
+                date: "2/1 Sun",
+                title: "朱紅神域與宇治茶香",
+                transport: "JR 奈良線 (京都-稻荷-宇治)",
+                schedule: [
+                    { time: "09:00", event: "伏見稻荷大社：千本鳥居參拜" },
+                    { time: "12:00", event: "宇治：平等院、宇治上神社" },
+                    { time: "12:30", event: "午餐：Irori Beniya 茶泡飯" },
+                    { time: "15:00", event: "品嚐中村藤吉抹茶、宇治川漫步" }
+                ],
+                note: "JR 奈良線車程約 20-35 分鐘。",
+                img: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 03",
+                date: "2/2 Mon",
+                title: "嵐山：竹林與禪意",
+                transport: "JR 山陰本線 (直達嵯峨嵐山, 12分)",
+                schedule: [
+                    { time: "09:00", event: "嵐山渡月橋、竹林小徑" },
+                    { time: "10:30", event: "天龍寺參拜 (世界遺產曹源池)" },
+                    { time: "12:00", event: "嵐山大街午餐、野宮神社" },
+                    { time: "14:30", event: "常寂光寺、嵐電足湯體驗" }
+                ],
+                note: "早起避開人潮，拍照最美。",
+                img: "https://images.unsplash.com/photo-1544750040-4ea9b8a27d38?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 04",
+                date: "2/3 Tue",
+                title: "鞍馬貴船健行 (家人會合)",
+                transport: "叡山電鐵 + 鞍馬寺纜車 (¥200)",
+                schedule: [
+                    { time: "10:40", event: "迎接爸爸、姐姐抵達 (IT284)" },
+                    { time: "13:00", event: "鞍馬寺健行路線 (約 3 小時)" },
+                    { time: "16:00", event: "貴船神社參拜 (抽水占卜)" },
+                    { time: "18:00", event: "貴船點燈 (注意末班公車 18:25)" }
+                ],
+                note: "健行約 3 小時。門票 ¥500。",
+                img: "https://images.unsplash.com/photo-1578469645742-46cae010e5d4?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 05",
+                date: "2/4 Wed",
+                title: "經典東山巡禮",
+                transport: "京都市營巴士 206 號線",
+                schedule: [
+                    { time: "08:00", event: "清水寺：清晨參拜避人潮" },
+                    { time: "10:00", event: "二三年坂、寧寧之道散步" },
+                    { time: "13:00", event: "高台寺、八坂神社" },
+                    { time: "15:30", event: "祇園花見小路、白川筋夕照" }
+                ],
+                note: "穿插町家咖啡廳休息，享受京都步調。",
+                img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 06",
+                date: "2/5 Thu",
+                title: "金碧禪意與天滿梅花",
+                transport: "市營巴士 205 / 204 號線",
+                schedule: [
+                    { time: "09:00", event: "金閣寺（鹿苑寺）看金色倒影" },
+                    { time: "11:00", event: "龍安寺：靜思枯山水石庭" },
+                    { time: "13:30", event: "北野天滿宮：參拜學問之神與賞梅" },
+                    { time: "16:00", event: "上七軒老街散策" }
+                ],
+                note: "金閣寺建議趁晴天早上前往。",
+                img: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 07",
+                date: "2/6 Fri",
+                title: "奈良鹿境：古都探訪",
+                transport: "近鐵奈良線 (京都-近鐵奈良, 45分)",
+                schedule: [
+                    { time: "09:30", event: "奈良公園：與神鹿近距離互動" },
+                    { time: "11:00", event: "東大寺：瞻仰世界最大青銅佛像" },
+                    { time: "13:00", event: "春日大社：千座燈籠林立" },
+                    { time: "15:00", event: "奈良町老街午茶：志津香釜飯" }
+                ],
+                note: "注意隨身物品，避免鹿群搶食。",
+                img: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 08",
+                date: "2/7 Sat",
+                title: "琵琶湖展望與送行",
+                transport: "JR 湖西線 ➔ 送機 (BR147)",
+                schedule: [
+                    { time: "10:00", event: "琵琶湖 Terrace 觀景台俯瞰絕景" },
+                    { time: "15:00", event: "返回京都車站整理行李" },
+                    { time: "17:00", event: "送家人至機場 (長榮 20:20 飛)" },
+                    { time: "18:00", event: "家人抵達第一航廈辦理報到" }
+                ],
+                note: "送機需預留 3 小時抵達機場。家人航程 BR147。",
+                img: "https://images.unsplash.com/photo-1621501174442-81e024117df7?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 09",
+                date: "2/8 Sun",
+                title: "海之京都：天橋立",
+                transport: "丹後鐵道特急 ➔ 傘松公園纜車",
+                schedule: [
+                    { time: "10:00", event: "天橋立：傘松公園「股觀」奇景" },
+                    { time: "13:00", event: "智恩寺：求扇子造型籤詩" },
+                    { time: "15:00", event: "天橋立沙洲散步或租腳踏車" },
+                    { time: "18:00", event: "享受當地海鮮料理" }
+                ],
+                note: "日本三景之一，壯闊的海灣景色。",
+                img: "https://images.unsplash.com/photo-1605281317010-fe5ffe798156?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 10",
+                date: "2/9 Mon",
+                title: "伊根舟屋：人海共生",
+                transport: "丹後巴士 ➔ 伊根遊覽船",
+                schedule: [
+                    { time: "09:30", event: "伊根舟屋散策、參觀古老酒造" },
+                    { time: "11:00", event: "搭乘遊覽船餵食海鷗與老鷹" },
+                    { time: "13:00", event: "午餐：品嚐新鮮鰤魚料理" },
+                    { time: "15:00", event: "悠閒享受海港靜謐時光" }
+                ],
+                note: "伊根舟屋是日本最美的村莊之一。",
+                img: "https://images.unsplash.com/photo-1605281317010-fe5ffe798156?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 11",
+                date: "2/10 Tue",
+                title: "美山町：童話雪村",
+                transport: "京都車站直達巴士 (需預約)",
+                schedule: [
+                    { time: "10:30", event: "美山茅草屋之里：古聚落探訪" },
+                    { time: "12:00", event: "美山鮮乳、布丁甜點時間" },
+                    { time: "14:00", event: "參與「雪燈廊」點燈活動 (限定)" },
+                    { time: "17:00", event: "返回京都市區" }
+                ],
+                note: "一月山區積雪機會高，請備足禦寒衣物。",
+                img: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 12",
+                date: "2/11 Wed",
+                title: "歷史軌跡：二條城與大阪",
+                transport: "JR 新快速 (京都-大阪, 25分)",
+                schedule: [
+                    { time: "09:30", event: "二條城：德川家康的鶯聲地板" },
+                    { time: "13:00", event: "前往大阪：大阪城天守閣參觀" },
+                    { time: "16:00", event: "道頓堀美食之旅、心齋橋購物" },
+                    { time: "20:00", event: "梅田藍天大廈看百萬夜景" }
+                ],
+                note: "使用大阪周遊卡可節省景點門票。",
+                img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 13",
+                date: "2/12 Thu",
+                title: "南禪寺與平安神域",
+                transport: "市營地下鐵 東西線",
+                schedule: [
+                    { time: "09:30", event: "南禪寺：水路閣、三門遠眺" },
+                    { time: "11:30", event: "永觀堂、平安神宮參拜" },
+                    { time: "14:00", event: "岡崎公園、京都美術館漫步" },
+                    { time: "16:00", event: "鴨川河畔喝咖啡度過午後" }
+                ],
+                note: "水路閣是著名的攝影取景點。",
+                img: "https://images.unsplash.com/photo-1528360983277-13d401cdc186?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 14",
+                date: "2/13 Fri",
+                title: "京都廚房與繁華街",
+                transport: "市營巴士 / 阪急電鐵",
+                schedule: [
+                    { time: "10:30", event: "下鴨神社：糾之森散策、河合神社" },
+                    { time: "13:00", event: "錦市場：品嚐各式地道京都小吃" },
+                    { time: "15:00", event: "四條河原町最後大採購" },
+                    { time: "19:00", event: "先斗町懷石料理或特色晚餐" }
+                ],
+                note: "下鴨神社是京都最古老的神社之一。",
+                img: "https://images.unsplash.com/photo-1545569341-9eb8b30979d9?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 15",
+                date: "2/14 Sat",
+                title: "千年觀音與五重塔",
+                transport: "市營巴士 206 號 / 207 號線",
+                schedule: [
+                    { time: "09:00", event: "三十三間堂：一千零一尊觀音像" },
+                    { time: "11:30", event: "東寺：參觀全日最高木造五重塔" },
+                    { time: "14:00", event: "京都塔、京都車站周邊巡禮" },
+                    { time: "18:00", event: "整理行李、享受最後的京都夜晚" }
+                ],
+                note: "三十三間堂內部禁止攝影。",
+                img: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?auto=format&fit=crop&q=80&w=1000"
+            },
+            {
+                day: "Day 16",
+                date: "2/15 Sun",
+                title: "歸途：珍重再見",
+                transport: "JR HARUKA ➔ 關西機場 ➔ CI177",
+                schedule: [
+                    { time: "10:00", event: "飯店辦理退房、寄放行李" },
+                    { time: "13:00", event: "最後的京料理午餐、採買手信" },
+                    { time: "16:30", event: "搭乘 HARUKA 前往關西機場" },
+                    { time: "20:10", event: "中華航空 CI177 起飛回高雄" }
+                ],
+                note: "回程航班 20:10。建議提早 3 小時抵達機場。",
+                img: "https://images.unsplash.com/photo-1621501174442-81e024117df7?auto=format&fit=crop&q=80&w=1000"
+            }
+        ];
+
+        let currentSlide = 0;
+
+        function renderSlide() {
+            const container = document.getElementById('root');
+            const slide = slides[currentSlide];
+            
+            let content = '';
+            
+            if (slide.type === "cover") {
+                content = `
+                    <div class="h-full flex flex-col items-center justify-center p-12 text-center fade-in">
+                        <div class="mb-4 text-stone-400 tracking-[0.3em] text-xs md:text-sm uppercase font-sans-custom">Winter Journey 2026</div>
+                        <h1 class="text-4xl md:text-7xl font-bold mb-6 tracking-widest">${slide.title}</h1>
+                        <div class="w-24 h-[2px] bg-[#A27B5C] mb-8 mx-auto"></div>
+                        <p class="text-xl md:text-2xl mb-2 text-stone-600">${slide.subtitle}</p>
+                        <p class="text-lg text-stone-400 font-sans-custom">${slide.date}</p>
+                        <div class="mt-12 p-4 border border-stone-100 rounded-sm text-xs md:text-sm text-stone-500 bg-stone-50/50 font-sans-custom">
+                            ${slide.details}
+                        </div>
+                    </div>
+                `;
+            } else {
+                const scheduleHtml = slide.schedule.map(item => `
+                    <div class="flex gap-4 text-sm border-b border-stone-50 pb-2">
+                        <span class="font-sans-custom font-bold w-12 text-stone-400 shrink-0">${item.time}</span>
+                        <span class="text-stone-700 font-sans-custom">${item.event}</span>
+                    </div>
+                `).join('');
+
+                content = `
+                    <div class="h-full flex flex-col md:flex-row fade-in">
+                        <div class="w-full md:w-1/2 p-6 md:p-10 flex flex-col justify-between overflow-y-auto">
+                            <div>
+                                <div class="flex justify-between items-center mb-4 md:mb-6">
+                                    <span class="text-2xl md:text-3xl font-bold text-[#A27B5C] font-sans-custom">${slide.day}</span>
+                                    <span class="text-stone-400 font-sans-custom text-xs md:text-sm tracking-wider">${slide.date}</span>
+                                </div>
+                                <h2 class="text-2xl md:text-4xl font-bold mb-4 md:mb-6 tracking-tight">${slide.title}</h2>
+                                <div class="space-y-4 md:space-y-6">
+                                    <div class="flex items-start gap-3">
+                                        <i data-lucide="train" class="text-[#A27B5C] w-5 h-5 mt-1 shrink-0"></i>
+                                        <div>
+                                            <p class="text-[10px] uppercase text-stone-400 tracking-widest font-bold mb-1 font-sans-custom">交通接駁</p>
+                                            <p class="text-sm font-sans-custom leading-relaxed">${slide.transport}</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-start gap-3">
+                                        <i data-lucide="clock" class="text-[#A27B5C] w-5 h-5 mt-1 shrink-0"></i>
+                                        <div class="w-full">
+                                            <p class="text-[10px] uppercase text-stone-400 tracking-widest font-bold mb-2 font-sans-custom">預計行程</p>
+                                            <div class="space-y-2">${scheduleHtml}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mt-6 p-3 bg-stone-50 rounded-sm flex items-start gap-3">
+                                <i data-lucide="info" class="text-stone-400 w-4 h-4 mt-1 shrink-0"></i>
+                                <p class="text-[11px] text-stone-500 italic leading-relaxed font-sans-custom">備註：${slide.note}</p>
+                            </div>
+                        </div>
+                        <div class="hidden md:block w-1/2 relative">
+                            <img src="${slide.img}" class="w-full h-full object-cover grayscale-[0.2]" />
+                            <div class="absolute inset-0 bg-[#A27B5C]/10 mix-blend-multiply"></div>
+                            <div class="absolute bottom-10 right-10 text-white text-right">
+                                <div class="text-4xl opacity-50 mb-2 font-serif">京</div>
+                                <div class="text-[10px] tracking-[0.5em] uppercase font-sans-custom">Kyoto Spirit</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            const progress = ((currentSlide + 1) / slides.length) * 100;
+
+            container.innerHTML = `
+                <div class="flex flex-col items-center justify-center min-h-screen p-2 md:p-4">
+                    <div class="relative w-full max-w-4xl bg-white shadow-2xl rounded-sm overflow-hidden border border-stone-200 aspect-square md:aspect-video slide-card">
+                        <div class="absolute top-0 left-0 w-full h-1 bg-stone-100 z-20">
+                            <div class="h-full bg-[#A27B5C] transition-all duration-700 ease-out" style="width: ${progress}%"></div>
+                        </div>
+                        ${content}
+                        <div class="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-6 md:gap-12 z-30">
+                            <button onclick="changeSlide(-1)" class="p-2 rounded-full hover:bg-stone-100 text-stone-400 transition-colors">
+                                <i data-lucide="chevron-left"></i>
+                            </button>
+                            <div class="text-[10px] font-sans-custom tracking-widest text-stone-400 uppercase">
+                                ${String(currentSlide + 1).padStart(2, '0')} / ${String(slides.length).padStart(2, '0')}
+                            </div>
+                            <button onclick="changeSlide(1)" class="p-2 rounded-full hover:bg-stone-100 text-stone-400 transition-colors">
+                                <i data-lucide="chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mt-6 text-stone-400 text-[10px] tracking-widest uppercase font-sans-custom opacity-60">
+                        使用左右鍵 (← →) 或空白鍵切換行程頁面
+                    </div>
+                </div>
+            `;
+            
+            lucide.createIcons();
+        }
+
+        function changeSlide(direction) {
+            currentSlide = (currentSlide + direction + slides.length) % slides.length;
+            renderSlide();
+        }
+
+        // 鍵盤支援：方向鍵與空白鍵
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowRight' || e.key === ' ') changeSlide(1);
+            if (e.key === 'ArrowLeft') changeSlide(-1);
+        });
+
+        window.onload = renderSlide;
+    </script>
+</body>
+</html>
